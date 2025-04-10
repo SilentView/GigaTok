@@ -223,9 +223,9 @@ bash scripts/composite_cmd/train_vq_and_eval_fsdp.sh
 ```
 
 
-**While we use rotation trick for all our released tokenizers, users can toggle it off when training GigaTok from scratch.** This can be achieved by setting `rot: False` in the model config file. The performance will not degrade.
+**While we use rotation trick for all our released tokenizers, users can toggle it off when training GigaTok from scratch.** This can be achieved by setting `rot: False` in the model config file. The performance will not degrade. Further, we suggest a simpler inital training setting by setting `aux_loss_end=0` (it toggles off the shortcut reconstruction and feature reconstruction loss for initial stage.)
 
-To check the suggested simplified tokenizer training config, see `configs/vq/VQ_BL256_train.yaml`.
+To check the suggested simplified tokenizer training config, see [configs/vq/VQ_BL256_train_new.yaml](configs/vq/VQ_BL256_train_new.yaml).
 
 
 
