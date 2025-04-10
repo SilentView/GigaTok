@@ -4,7 +4,7 @@
 <div align="center">
 
 [![arXiv](https://img.shields.io/badge/Paper-Arxiv-b31b1b.svg)]()&nbsp;
-[![project page](https://img.shields.io/badge/Project-Page-green)]()&nbsp;
+[![project page](https://img.shields.io/badge/Project-Page-green)](https://silentview.github.io/GigaTok/)&nbsp;
 </div>
 
 
@@ -27,7 +27,7 @@
 <p>
 
 
-We introduce **GigaTok**, the first method for scaling visual tokenizers to 3 billion parameters. We reveal that reconstruction vs. generation dilemma for scaling tokenizers is caused by increasing latent space complexity. And it can be resolved by semantic regularization. And to scale up a visual tokenizer to 3B:
+We introduce **GigaTok**, the first method for scaling visual tokenizers to 3 billion parameters. We reveal that *reconstruction vs. generation dilemma* for scaling tokenizers is caused by increasing latent space complexity. And it can be resolved by semantic regularization. And to scale up a visual tokenizer to 3B:
   - 1D tokenizers are more scalable than 2D tokenizers. 
   - It is better prioritizing decoder scaling when expanding both encoder and decoder.
   - Entropy loss helps stabilize training for billion-scale tokenizers.
