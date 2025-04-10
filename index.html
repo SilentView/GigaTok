@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="GigaTok: Scaling Visual Tokenizers to 3 Billion Parameters
+        for Autoregressive Image Generation">
+  <meta name="keywords" content="GigaTok, Visual Generation, Autoregressive Models, Image Generation, Tokenizers">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GigaTok: Scaling Visual Tokenizers to 3 Billion Parameters
+    for Autoregressive Image Generation</title>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCJY998LVV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'G-QCJY998LVV');
+  </script>
+  
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <style>
+    /* Global background setting */
+    body, html {
+      background-color: #ffffff;
+      font-family: 'Google Sans', 'Noto Sans', sans-serif;
+    }
+    
+    /* 修复标题行数问题 */
+    .publication-title {
+      font-size: 2.5rem !important; /* 适当减小字号 */
+      line-height: 1.2 !important; /* 减小行高 */
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    /* 内容卡片样式 - 统一的蓝色背景 */
+    .content-card {
+      background-color: #f8f9ff;
+      border-radius: 8px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .content-card:hover {
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    
+    /* Enhanced section styling */
+    .section {
+      padding: 3rem 1.5rem;
+    }
+    
+    /* 居中的标题样式 */
+    .title-centered {
+      position: relative;
+      text-align: center;
+      color: #0074D9;
+      margin-bottom: 2.5rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    
+    .title-centered::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background-color: #0074D9;
+      border-radius: 2px;
+    }
+    
+    /* 贡献项目样式 - 修改文字颜色为正常 */
+    .contribution-item {
+      color: #333; /* 改为正常颜色 */
+      font-weight: 500; /* 稍微减少粗体 */
+      padding: 15px 20px;
+      background-color: #f8f9ff;
+      border-radius: 8px;
+      margin-bottom: 15px !important;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .contribution-item:hover {
+      background-color: #f0f4ff;
+      transform: translateX(5px);
+    }
+    
+    /* Image styling */
+    .content img, .method-figure {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto 0.5rem auto;
+      display: block;
+      box-shadow: none;
+      border-radius: 8px; 
+      background-color: #ffffff;
+      transition: transform 0.3s ease;
+    }
+    
+    /* Smaller figures */
+    .method-figure.small-figure {
+      width: 60%;
+      max-width: 700px;
+    }
+
+    /* Full width figures */
+    .full-width-figure {
+      width: 100% !important;
+      max-width: none !important;
+      background-color: #ffffff;
+    }
+    
+    /* Navigation bar styling */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background-color: rgba(255, 255, 255, 0.95);
+      transition: all 0.3s ease;
+    }
+    
+    /* Text emphasis styling */
+    strong {
+      color: #0074D9;
+      font-weight: 600;
+    }
+    
+    /* 图片说明文字与图片之间距离控制 */
+    .figure-caption {
+      margin-top: 0.8rem !important;
+      padding-top: 0 !important;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #444;
+    }
+    
+    /* 确保所有SVG图像有白色背景 */
+    img[src$=".svg"] {
+      background-color: #ffffff !important;
+    }
+    
+    /* 图片宽度设置 */
+    .full-width-container {
+      width: 100%;
+      max-width: 1000px; /* 控制容器宽度 */
+      margin: 0 auto;
+    }
+    
+    /* 标准宽度的图片 */
+    .full-width-comparison {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 8px;
+    }
+    
+    /* 图片说明宽度 */
+    .caption-container {
+      width: 100%;
+      max-width: 1000px; /* 与图片宽度一致 */
+      margin: 0 auto;
+    }
+    
+    .standard-figure {
+      max-width: 900px;
+      width: 100%;
+    }
+    
+    /* 调整Token Dilemma部分 */
+    .dilemma-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 15px;
+      justify-content: space-between;
+    }
+    
+    .dilemma-side {
+      flex: 1;
+      min-width: 250px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+    }
+    
+    .dilemma-side:hover {
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+    
+    .dilemma-side h4 {
+      color: #0074D9;
+      font-weight: 600;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      position: relative;
+      padding-bottom: 8px;
+    }
+    
+    .dilemma-side h4::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 2px;
+      background-color: #0074D9;
+    }
+    
+    .dilemma-side ul {
+      margin-left: 20px;
+      line-height: 1.6;
+    }
+    
+    .dilemma-side li {
+      margin-bottom: 8px;
+    }
+    
+    /* 方法标题样式 */
+    .method-title {
+      font-size: 1.5rem;
+      color: #0074D9;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    /* 代码格式 */
+    code {
+      background-color: transparent !important;
+      color: #333 !important;
+      padding: 0 !important;
+      font-family: monospace;
+    }
+    
+    pre {
+      background-color: transparent !important;
+      padding: 0 !important;
+      border: none !important;
+      margin: 0 !important;
+    }
+    
+    /* 贡献点中的蓝色文字覆盖 */
+    .contribution-item strong,
+    .contribution-item a,
+    .contribution-item p {
+      color: #333 !important;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://yuqingwang1029.github.io/Loong-video/">
+            Loong
+          </a>
+          <a class="navbar-item" href="https://silentview.github.io/LVD-2M/">
+            LVD-2M
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">GigaTok:
+            Scaling Visual Tokenizers to 3 Billion Parameters
+            for Autoregressive Image Generation</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=tTMKGSYAAAAJ&hl">Tianwei Xiong</a><sup>1*</sup></span>
+            <span class="author-block"><a href="https://scholar.google.com.sg/citations?user=8gm-CYYAAAAJ&hl=en">Jun Hao Liew</a><sup>2</sup></span>
+            <span class="author-block"><a href="https://speedinghzl.github.io/">Zilong Huang </a><sup>2</sup></span>
+            <span class="author-block"><a href="https://scholar.google.com.sg/citations?user=Q8iay0gAAAAJ&hl">Jiashi Feng</a><sup>2</sup></span>
+            <span class="author-block"><a href="https://xh-liu.github.io/">Xihui Liu</a><sup>1,<i class="fas fa-envelope"></i></sup></span><br>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>The University of Hong Kong,</span>
+            <span class="author-block"><sup>2</sup>ByteDance Seed</span>
+            <br>
+            <small>*Work partly done as an Intern at ByteDance. <sup><i class="fas fa-envelope"></i></sup>Corresponding author.</small>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- arXiv Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2503.16430" target="_blank">
+                  <span class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/yuqingwang1029/TokenBridge" target="_blank">
+                  <span class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                        <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- News -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 title-centered" data-aos="fade-up">🔈News</h2>
+        
+        <div class="content has-text-justified content-card" data-aos="fade-up" data-aos-delay="100">
+          <!-- Add some sample news items here -->
+          <div class="news-item">
+            <p><strong>[2025-04-11]</strong> The research paper, codebase and model checkpoints of GigaTok are released!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .news-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eaeaea;
+  }
+
+  .news-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+</style>
+
+
+<!-- Teaser -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 title-centered" data-aos="fade-up">Scaling Tokenizers for <br>Reconstruction and Autoregressive Generation</h2>
+        <div class="content">
+          <div class="content-card" data-aos="fade-up" data-aos-delay="100">
+            <p class="is-size-5">
+              🤔<strong>Reconstruction vs. generation dilemma</strong>: larger tokenizers can bring better reconstruction, but may lead to worse downstream AR generation. 
+              <br>
+              🚀GigaTok breaks through this reconstruction vs. generation dilemma. 
+            </p> 
+            
+            <div class="content" data-aos="fade-up" data-aos-delay="100">
+              <img src="./static/images/teaser_1col_v2.png" alt="Method Comparison" class="full-width-comparison" style="background-color: #ffffff;">
+              
+              <div class="caption-container">
+                <div class="content has-text-justified figure-caption" data-aos="fade-up" data-aos-delay="150">
+                  <p>
+                    <strong>Up (reconstruction)</strong>: Naively scaling visual tokenizers achieves better reconstruction (red line). GigaTok presents superior reconstruction quality after scaling (blue line and qualitative results).
+                    <br>
+                    <strong>Bottom (generation)</strong>: Naively scaling visual tokenizers leads to worse AR generation. In contrast, GigaTok achieves better performance for both reconstruction and generation as tokenizers scale up.
+                  </p>
+                </div>
+              </div>
+
+            <!-- <p class="is-size-5 mt-4">
+              <strong>How do we bridge this gap?</strong>
+            </p>
+            
+            <ol class="mt-2 ml-5">
+              <li class="mb-2">We <strong>decouple discretization from the tokenizer training process</strong> through post-training quantization that directly obtains discrete tokens from pretrained continuous representations, enabling seamless conversion between token types.</li>
+              <li class="mb-2">Our approach <strong>bridges the quality gap</strong> between discrete and continuous methods, achieving continuous-level visual quality while maintaining the modeling simplicity of discrete approaches - harnessing the strengths of both approaches.</li>
+            </ol> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Comparison Section - 受控宽度 -->
+<!-- <section class="section">
+  <div class="full-width-container">
+    <h2 class="title is-3 title-centered" data-aos="fade-up">Comparison of Different AR Approaches</h2>
+    <div class="content" data-aos="fade-up" data-aos-delay="100">
+      <img src="./static/images/compare.svg" alt="Method Comparison" class="full-width-comparison" style="background-color: #ffffff;">
+      
+      <div class="caption-container">
+        <div class="content has-text-justified figure-caption" data-aos="fade-up" data-aos-delay="150">
+          <p>
+             <strong>(a) Traditional discrete tokenization</strong> incorporates quantization during training, resulting in tokenizer training instability and limited vocabulary size that restricts representational capacity. <strong>(b) Hybrid continuous AR models</strong> preserve rich visual information but need complex distribution modeling (diffusion or GMM) beyond standard categorical prediction. <strong>(c) Our approach</strong> bridges these paradigms by applying post-training quantization to pretrained continuous features, maintaining the high representational capacity of continuous tokens while enabling simple autoregressive modeling.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+<!-- Teaser image with controlled width -->
+<section class="section">
+  <div class="full-width-container">
+    <div class="columns is-centered">
+      <div class="content" data-aos="fade-up">
+        <img src="./static/images/qual_grid.png" alt="qualitative samples" class="full-width-comparison" style="background-color: #ffffff;">
+        
+        <div class="caption-container">
+          <div class="content has-text-centered figure-caption" data-aos="fade-up" data-aos-delay="200">
+            <p>
+              The 2.9B GigaTok achieves SOTA autoregressive image generation with a 1.4B AR model on ImageNet 256×256 resolution.
+            </p>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Abstract -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 title-centered" data-aos="fade-up">Abstract</h2>
+        
+        <div class="content has-text-justified" data-aos="fade-up" data-aos-delay="100">
+          <p>
+            In autoregressive (AR) image generation, visual tokenizers compress images into compact discrete latent tokens, enabling efficient training of downstream autoregressive models for visual generation via next-token prediction. While scaling visual tokenizers improves image reconstruction quality, it often degrades downstream generation quality—a challenge not adequately addressed in existing literature. To address this, we introduce GigaTok, the first approach to simultaneously improve image reconstruction, generation, and representation learning when scaling visual tokenizers. We identify the growing complexity of latent space as the key factor behind the reconstruction vs. generation dilemma.
+          </p>
+          <p>
+            To mitigate this, we propose semantic regularization, which aligns tokenizer features with semantically consistent features from a pre-trained visual encoder. This constraint prevents excessive latent space complexity during scaling, yielding consistent improvements in both reconstruction and downstream autoregressive generation. Building on semantic regularization, we explore three key practices for scaling tokenizers: (1) using 1D tokenizers for better scalability, (2) prioritizing decoder scaling when expanding both encoder and decoder, and (3) employing entropy loss to stabilize training for billion-scale tokenizers. By scaling to <strong>3 billion</strong> parameters, GigaTok achieves state-of-the-art performance in reconstruction, downstream AR generation, and downstream AR representation quality.  
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Contributions Section - 修改文字颜色为正常 -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 title-centered" data-aos="fade-up">Main Contributions</h2>
+        <div class="content">
+          <ul style="list-style-type: none; padding: 0;">
+            <li class="is-size-5 mb-4 has-text-left contribution-item" data-aos="fade-up" data-aos-delay="100">We identify that the reconstruction vs. generation dilemma in tokenizer scaling stems from increased latent space complexity in larger tokenizers. To address this, we propose semantic regularization, effectively mitigating the dilemma and enabling tokenizer scaling.</li>
+            <li class="is-size-5 mb-4 has-text-left contribution-item" data-aos="fade-up" data-aos-delay="200">We explore best practices for scaling tokenizers, including 1D tokenizer with hybrid CNN-Transformer architecture, asymmetric encoder-decoder scaling, and entropy loss for billion-scale tokenizers.</li>
+            <li class="is-size-5 mb-4 has-text-left contribution-item" data-aos="fade-up" data-aos-delay="300">Our GigaTok is the first tokenizer scaled to 3B, achieving state-of-the-art reconstruction, downstream AR generation, and downstream AR representation on ImageNet.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pilot Study Section -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 title-centered" data-aos="fade-up">Pilot Study for <br> Reconstruction vs. Generation Dilemma</h2>
+        <h3 class="method-title mt-6" data-aos="fade-up">AR Probinng</h3>
+
+        <div class="caption-container">
+          <div class="content has-text-justified figure-caption" data-aos="fade-up" data-aos-delay="150">
+            <p>
+            <strong>A complete evaluation of a tokenizer should contain rFID and downstream gFID.</strong> 
+            This is why we introduce "AR Probing". Every time we evaluate a tokenizer, we train a small 111M AR model on the tokenizer checkpoint, and evaluate the gFID as well as cross-entropy validation loss of the AR model.
+            </p>
+          </div>
+        </div>
+
+        
+        <!-- Pilot Study Results -->
+        <h3 class="method-title mt-6" data-aos="fade-up">Latent Space Complexity is Key to Tokenizer Scaling</h3>
+        <div class="full-width-container" data-aos="fade-up" data-aos-delay="100">
+          <div class="has-text-centered">
+            <img src="./static/images/tokenizer_scaling_nodist_v2.png" alt="Naive Scaling" class="full-width-comparison" style="background-color: #ffffff;">
+          
+            <div class="caption-container">
+              <div class="content has-text-justified figure-caption" data-aos="fade-up" data-aos-delay="150">
+                <p>
+                  <strong>Scaling trend for vanilla 1D tokenizers.</strong> As the model size increases, the reconstruction quality of vanilla tokenizers improves but the downstream AR Probing gFID consistently degrades. The increasing AR Probing validation loss indicates that scaling vanilla tokenizers results in a more complex latent space, making it difficult for AR models to learn effectively. 
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Method Study Section -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 title-centered" data-aos="fade-up">GigaTok</h2>
+        
+          <!-- Post-Training Quantization -->
+          <h3 class="method-title mt-6" data-aos="fade-up">Architecture & Semantic Regularization</h3>
+          <div class="full-width-container" data-aos="fade-up" data-aos-delay="100">
+            <div class="has-text-centered">
+              <img src="./static/images/pipeline_1col.png" alt="pipeline" class="full-width-comparison" style="background-color: #ffffff;">
+            
+              <div class="caption-container">
+                <div class="content has-text-justified figure-caption" data-aos="fade-up" data-aos-delay="150">
+                  <p>
+                    <strong>GigaTok architecture and semantic regularization.</strong> <i>Top</i>: We use a hybrid CNN-Transformer design for our visual tokenizer. The transformer layers are implemented with ViT for 2D tokenizer and Q-Former for 1D tokenizer. <i>Bottom</i>: We use a frozen DINOv2 image encoder for semantic regularization.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="method-title mt-6" data-aos="fade-up">Entropy Loss for Large Tokenizers</h3>
+          <div class="full-width-container" data-aos="fade-up" data-aos-delay="100">
+            <div class="has-text-centered">
+              <img src="./static/images/billion_tok_entropy_loss.png" alt="pipeline" class="full-width-comparison" style="background-color: #ffffff;">
+            
+              <div class="caption-container">
+                <div class="content has-text-justified figure-caption" data-aos="fade-up" data-aos-delay="150">
+                  <p>
+                    <strong>Training curves for 2.9B XL-XXL tokenizers with and without entropy loss.</strong> A 2.9B tokenzier does not converge without entropy loss. The entropy loss encourages high codebook usage and stabilizes training loss.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Experiments Section -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 title-centered" data-aos="fade-up">Experiments</h2>
+
+        <!-- Semantic Regularization-->
+        <h3 class="method-title mt-6" data-aos="fade-up">Semantic Regularization for Model Scaling</h3>
+        <div class="full-width-container" data-aos="fade-up" data-aos-delay="100">
+          <div class="has-text-centered">
+            <img src="./static/images/tokenizer_scaling.png" alt="semantic regularization for scaling" class="full-width-comparison" style="background-color: #ffffff;">
+          
+            <div class="caption-container">
+              <div class="content has-text-justified figure-caption" data-aos="fade-up" data-aos-delay="150">
+                <p>
+                  <strong>Scaling trends of tokenizers for reconstruction, downstream generation and representation quality with and without semantic regularization.</strong> By semantic regularization, GigaTok resolves the reconstruction vs. generation dilemma for tokenizer scaling in contrast to the vanilla version without semantic regularization. Moreover, GigaTok consistently improves the representation quality of downstream AR models by scaling up visual tokenizers. Note that in the last two figures, the red and blue curves correspond to different scales on the y-axis.
+                </p>
+              </div>
+            </div>
+          </div>
+
+       
+ 
+
+        <!-- Latent Space Visualization Tokenizer -->
+        <h3 class="method-title mt-6" data-aos="fade-up">Visualization of Latent Space</h3>
+        <div class="full-width-container" data-aos="fade-up" data-aos-delay="100">
+          <div class="has-text-centered">
+            <img src="./static/images/sem_pca.png" alt="semantic visualization by PCA" class="full-width-comparison" style="background-color: #ffffff;">
+          
+            <div class="caption-container">
+              <div class="content has-text-justified figure-caption" data-aos="fade-up" data-aos-delay="150">
+                <p>
+                  <strong>Visualization of tokenizer features with and without semantic regularization.</strong>
+                  We compute PCA among the tokenizer features of a group of images of the same "golden retriever" class
+                  and visualize the first 3 PCA components.
+                  We observe that the latent space of vanilla tokenizers shows inconsistent features both within a single image or across multiple semantically similar images. In contrast, GigaTok encodes images with semantic consistency and thus reduces the latent space complexity for AR models.  
+
+                </p>
+              </div>
+            </div>
+          </div>
+
+
+
+          <h3 class="method-title mt-6" data-aos="fade-up">Asymmetric Design for Better Performance</h3>
+          <div class="full-width-container" data-aos="fade-up" data-aos-delay="100">
+            <div class="has-text-centered">
+              <img src="./static/images/enc_dec_scaling.png" alt="Encoder Decoder Scaling" class="full-width-comparison" style="background-color: #ffffff; width: 70%;">
+            
+              <div class="caption-container">
+                <div class="content has-text-justified figure-caption" data-aos="fade-up" data-aos-delay="150">
+                  <p>
+                    <strong>The results for scaling encoder/decoder.</strong> Prioritizing the scaling of decoders benefits downstream generation more than scaling encoders (S-B v.s. B-S). But scaling encoders can still bring significant improvements (S-L v.s. B-L).
+                  </p>
+                </div>
+              </div>
+            </div>
+  
+          <h3 class="method-title mt-6" data-aos="fade-up">Scalability: 1D vs. 2D Tokenizers</h3>
+          <div class="full-width-container" data-aos="fade-up" data-aos-delay="100">
+            <div class="has-text-centered">
+              <img src="./static/images/pipeline_1d_2d.png" alt="1D and 2D Tokenizer" class="full-width-comparison" style="background-color: #ffffff;">
+            
+              <div class="caption-container">
+                <div class="content has-text-centered figure-caption" data-aos="fade-up" data-aos-delay="150">
+                  <p>
+                    <strong>Left</strong>: 1D architecture of GigaTok with Q-Former. <strong>Right</strong>: 2D architecture with ViT blocks.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 在第二个 full-width-container 上添加 margin-top -->
+          <div class="full-width-container" data-aos="fade-up" data-aos-delay="100" style="margin-top: 30px;">
+            <div class="has-text-centered">
+              <img src="./static/images/tok_scaling_2d_1d.png" alt="1D and 2D Tokenizer" class="full-width-comparison" style="background-color: #ffffff;">
+            
+              <div class="caption-container">
+                <div class="content has-text-justified figure-caption" data-aos="fade-up" data-aos-delay="150">
+                  <p>
+                    <strong>Scalability comparison for 1D and 2D tokenizers.</strong> Using the same training setting, 1D tokenizers shows better reconstruction (rFID) and downstream representation quality (AR Probing: Lin Acc.). For downstream generation (gFID), 1D tokenizers present a steeper improving trend than 2D tokenizers.
+                  </p>
+                </div>
+              </div>
+            </div>
+  
+   
+        
+        <!-- Main Results -->
+        <h3 class="method-title mt-6" data-aos="fade-up">Main Results</h3>
+        <div class="content" data-aos="fade-up" data-aos-delay="100">
+          <div class="has-text-centered">
+            <img src="./static/images/main_table.png" alt="Quantitative Comparison" class="standard-figure" style="background-color: #ffffff;">
+          
+            <div class="content has-text-justified figure-caption" data-aos="fade-up" data-aos-delay="150">
+              <p>
+                <strong>Comparison for tokenizers and downstream generation models on ImageNet 256x256.</strong> 
+                For gFID, we present the lowest value between w/ or w/o CFG scenarios. 
+                <sup>†</sup>: Training set includes data besides ImageNet. 
+                <sup>‡</sup>: Using frozen DINO for discriminator, which largely improves rFID. 
+                <sup>★</sup>: Without classifier-free-guidance.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 title-centered" data-aos="fade-up">BibTeX</h2>
+        <div data-aos="fade-up" data-aos-delay="100">
+          <pre>
+            <code>
+@article{gigatok,
+    title={GigaTok: Scaling Visual Tokenizers to 3 Billion Parameters for Autoregressive Image Generation},
+    author={},
+    journal={},
+    year={2025}
+}
+            </code>
+          </pre>
+        </div>
+
+        <h3 class="method-title mt-6" data-aos="fade-up">Acknowledgment</h3>
+        <div data-aos="fade-up" data-aos-delay="150">
+          <p>The authors sincerely thank <a href="https://yucornetto.github.io/">Qihang Yu</a> and <a href="https://yucornetto.github.io/">Liang-Chieh Chen</a> for their valuable discussions during the development of GigaTok.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            The website template is borrowed from <a href="https://nerfies.github.io/">Nerfies</a> and 
+            <a href="https://yuqingwang1029.github.io/TokenBridge/">TokenBridge</a>
+            under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+  // Initialize AOS animation library
+  document.addEventListener('DOMContentLoaded', function() {
+    AOS.init({
+      duration: 800,
+      easing: 'ease',
+      once: true
+    });
+  });
+
+  // Handle navbar burger menu for mobile
+  document.addEventListener('DOMContentLoaded', () => {
+    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+    if ($navbarBurgers.length > 0) {
+      $navbarBurgers.forEach(el => {
+        el.addEventListener('click', () => {
+          const target = el.dataset.target;
+          const $target = document.getElementById(target);
+          el.classList.toggle('is-active');
+          $target.classList.toggle('is-active');
+        });
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
