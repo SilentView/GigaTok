@@ -200,7 +200,7 @@ See [Detailed_instructions](Detailed_instructions.md)
 
 ## Acknowledgements
 
-The authors sincerely thank <a href="https://yucornetto.github.io/">Qihang Yu</a> and <a href="https://yucornetto.github.io/">Liang-Chieh Chen</a> for their valuable discussions during the development of GigaTok.
+The authors sincerely thank <a href="https://yucornetto.github.io/">Qihang Yu</a> and <a href="http://liangchiehchen.com/">Liang-Chieh Chen</a> for their valuable discussions during the development of GigaTok.
 
 This codebase is built on [LlamaGen](https://github.com/FoundationVision/LlamaGen). Important reference codebases for this project include [REPA](https://github.com/sihyun-yu/REPA), [DETR](https://github.com/facebookresearch/detr).
 
