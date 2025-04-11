@@ -15,7 +15,7 @@
 
 ## 🔈News
 
-- [2025/04/11] Research paper, code, and models are released for GigaTok!
+<!-- - [2025/04/11] Research paper, code, and models are released for GigaTok! -->
 
 
 ## Introduction
