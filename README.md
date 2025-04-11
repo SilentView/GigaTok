@@ -12,10 +12,21 @@
 <img src="assets/images/qual_grid.png" width=95%>
 <p>
 
+<div align="center">
+  <a href="https://scholar.google.com/citations?user=tTMKGSYAAAAJ&hl" target="_blank">Tianwei&nbsp;Xiong</a><sup>1*</sup> &ensp; <b>&middot;</b> &ensp;
+  <a href="https://scholar.google.com.sg/citations?user=8gm-CYYAAAAJ&hl=en" target="_blank">Jun&nbsp;Hao&nbsp;Liew</a><sup>2</sup> &ensp; <b>&middot;</b> &ensp;
+  <a href="https://speedinghzl.github.io/" target="_blank">Zilong&nbsp;Huang</a><sup>2</sup> &ensp; <b>&middot;</b> &ensp;
+  <a href="https://scholar.google.com.sg/citations?user=Q8iay0gAAAAJ&hl" target="_blank">Jiashi&nbsp;Feng</a><sup>2</sup> &ensp; <b>&middot;</b> &ensp;
+  <a href="https://xh-liu.github.io/" target="_blank">Xihui&nbsp;Liu</a><sup>1✉</sup><br>
+  <sup>1</sup>The University of Hong Kong &emsp; <sup>2</sup>ByteDance Seed &emsp; <br>
+  <sup>*</sup>Work partly done as an Intern at ByteDance. ✉ Corresponding author &emsp; <br>
+</div>
+<br>
+
 
 ## 🔈News
 
-<!-- - [2025/04/11] Research paper, code, and models are released for GigaTok! -->
+- [2025/04/12] Research paper, code, and models are released for GigaTok!
 
 
 ## Introduction
@@ -200,11 +211,11 @@ See [Detailed_instructions](Detailed_instructions.md)
 
 ## Acknowledgements
 
-The authors sincerely thank <a href="https://yucornetto.github.io/">Qihang Yu</a> and <a href="http://liangchiehchen.com/">Liang-Chieh Chen</a> for their valuable discussions during the development of GigaTok.
+- The authors sincerely thank <a href="https://yucornetto.github.io/">Qihang Yu</a> and <a href="http://liangchiehchen.com/">Liang-Chieh Chen</a> for their valuable discussions during the development of GigaTok.
 
-This codebase is built on [LlamaGen](https://github.com/FoundationVision/LlamaGen). Important reference codebases for this project include [REPA](https://github.com/sihyun-yu/REPA), [DETR](https://github.com/facebookresearch/detr).
+- This codebase is built on [LlamaGen](https://github.com/FoundationVision/LlamaGen). Important reference codebases for this project include [REPA](https://github.com/sihyun-yu/REPA), [DETR](https://github.com/facebookresearch/detr).
 
-We also include some experimental implementation from [vaex](https://github.com/FoundationVision/vaex), [vector-quantize-pytorch](https://github.com/lucidrains/vector-quantize-pytorch), [LARP](https://github.com/hywang66/LARP/), [rotation_trick](https://github.com/cfifty/rotation_trick), etc. More references can be found in corresponding files. 
+- We also include some experimental implementation from [vaex](https://github.com/FoundationVision/vaex), [vector-quantize-pytorch](https://github.com/lucidrains/vector-quantize-pytorch), [LARP](https://github.com/hywang66/LARP/), [rotation_trick](https://github.com/cfifty/rotation_trick), etc. More references can be found in corresponding files. 
 
 
 
