@@ -3,7 +3,7 @@
 
 <div align="center">
 
-[![arXiv](https://img.shields.io/badge/Paper-Arxiv-b31b1b.svg)]()&nbsp;
+[![arXiv](https://img.shields.io/badge/Paper-Arxiv-b31b1b.svg)](https://arxiv.org/abs/2504.08736)&nbsp;
 [![project page](https://img.shields.io/badge/Project-Page-green)](https://silentview.github.io/GigaTok/)&nbsp;
 </div>
 
@@ -26,7 +26,7 @@
 
 ## 🔈News
 
-- [2025/04/12] Research paper, code, and models are released for GigaTok!
+- [2025/04/14] Research paper, code, and models are released for GigaTok!
 
 
 ## Introduction
@@ -228,8 +228,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ```
 @article{gigatok,
     title={GigaTok: Scaling Visual Tokenizers to 3 Billion Parameters for Autoregressive Image Generation},
-    author={},
-    journal={},
+    author={Tianwei Xiong and Jun Hao Liew and Zilong Huang and Jiashi Feng and Xihui Liu},
+    journal={arXiv preprint arXiv:2504.08736},
     year={2025}
 }
 ```
