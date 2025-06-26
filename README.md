@@ -3,6 +3,8 @@
 
 <div align="center">
 
+<!-- *ICCV 2025* -->
+
 [![arXiv](https://img.shields.io/badge/Paper-Arxiv-b31b1b.svg)](https://arxiv.org/abs/2504.08736)&nbsp;
 [![project page](https://img.shields.io/badge/Project-Page-green)](https://silentview.github.io/GigaTok/)&nbsp;
 </div>
@@ -26,6 +28,7 @@
 
 ## 🔈News
 
+- [2025/06/26] GigaTok is accepted by ICCV 2025!
 - [2025/04/14] Research paper, code, and models are released for GigaTok!
 
 
