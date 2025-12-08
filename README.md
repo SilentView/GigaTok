@@ -7,6 +7,7 @@
 
 [![arXiv](https://img.shields.io/badge/Paper-Arxiv-b31b1b.svg)](https://arxiv.org/abs/2504.08736)&nbsp;
 [![project page](https://img.shields.io/badge/Project-Page-green)](https://silentview.github.io/GigaTok/)&nbsp;
+[![Models](https://img.shields.io/badge/🤗%20Hugging%20Face-Models-yellow)](https://huggingface.co/YuuTennYi/GigaTok)&nbsp;
 </div>
 
 
@@ -82,6 +83,12 @@ All the tokenizers are for 256x256 images.
 | B-L (dino disc) |  [VQ_BL256_dino_disc.yaml](configs/vq/VQ_BL256_dino_disc.yaml)   | 622M               | 0.51 | 0.2056 | [VQ_BL256_dino_disc.pt](https://drive.google.com/file/d/11bXyg6y15hIWYnIsl7YbwDtRAJMK7jjn/view?usp=drive_link) | GPT-B    | 111M              | 3.33 | 67.7% | [GPT_B256_e300_VQ_BL_dino_disc.pt](https://drive.google.com/file/d/1BckVcQ7NPipa8tjAazwBy0usJnO8pdHp/view?usp=drive_link) |
 | XL-XXL          |   [VQ_XLXXL256.yaml](configs/vq/VQ_XLXXL256.yaml)  | 2.9B               | 0.79 | 0.1947 | [VQ_XLXXL256_e300.pt](https://drive.google.com/file/d/1HK_bV_zklLfGmIHGE4gMwjfhLLKi6Z3G/view?usp=sharing)      | GPT-B    | 111M              | 3.15 | 72.0% | [GPT_B256_e300_VQ_XLXXL.pt](https://drive.google.com/file/d/1zIIy6TVo8WIHiGKFp83CfyFaUytFQ1uR/view?usp=sharing)           |
 
+
+| Tokenizer       |  Config   | Param. (Tokenizer) | rFID | LPIPS  | Tokenizer Download Link                                                                                        |
+| --------------- | --- | ------------------ | ---- | ------ | -------------------------------------------------------------------------------------------------------------- |
+| S-S-2d             |   [VQ_SS256_2d.yaml](configs/vq/VQ_SS256_2d.yaml)  | 111M               | 1.22 | 0.2227 | [VQ_SS256_2d_e100.pt](https://drive.google.com/file/d/1vrnm5kI67cCCL_F-dGUeO3dJyBDYG6YV/view?usp=drive_link)         |
+| S-B-2d             |   [VQ_SB256_2d.yaml](configs/vq/VQ_SB256.yaml)  | 197M               | 0.97 | 0.2118 | [VQ_SB256_2d_e200.pt](https://drive.google.com/file/d/1VJG2j7-QmFo6jss8PrgeksLsMFJGIotw/view?usp=drive_link)         |
+| B-L-2d             |   [VQ_BL256_2d.yaml](configs/vq/VQ_BL256.yaml)  | 491M               | 0.86 | 0.2046 | [VQ_BL256_2d_e200.pt](https://drive.google.com/file/d/1HmXqFvMQKC0_orcDcXDyv89FqCAIXNp0/view?usp=drive_link)         |
 
 **Larger AR models Downloading**
 
