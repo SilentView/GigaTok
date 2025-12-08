@@ -73,7 +73,7 @@ bash env_install.sh
 
 ## Download Checkpoints
 
-All the tokenizers are for 256x256 images.
+All the tokenizers are for 256x256 images. You can also download the models from [Hugging Face](https://huggingface.co/YuuTennYi/GigaTok).
 
 | Tokenizer       |  Config   | Param. (Tokenizer) | rFID | LPIPS  | Tokenizer Download Link                                                                                        | AR Model | Param. (AR) | gFID | Acc.  | AR Model Download Link                                                                                                    |
 | --------------- | --- | ------------------ | ---- | ------ | -------------------------------------------------------------------------------------------------------------- | -------- | ----------------- | ---- | ----- | ------------------------------------------------------------------------------------------------------------------------- |
