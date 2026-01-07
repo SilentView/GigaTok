@@ -236,10 +236,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Citation
 
 ```
-@article{gigatok,
-    title={GigaTok: Scaling Visual Tokenizers to 3 Billion Parameters for Autoregressive Image Generation},
-    author={Tianwei Xiong and Jun Hao Liew and Zilong Huang and Jiashi Feng and Xihui Liu},
-    journal={arXiv preprint arXiv:2504.08736},
-    year={2025}
+@inproceedings{gigatok,
+    author    = {Xiong, Tianwei and Liew, Jun Hao and Huang, Zilong and Feng, Jiashi and Liu, Xihui},
+    title     = {GigaTok: Scaling Visual Tokenizers to 3 Billion Parameters for Autoregressive Image Generation},
+    booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+    month     = {October},
+    year      = {2025},
+    pages     = {18770-18780}
 }
 ```
